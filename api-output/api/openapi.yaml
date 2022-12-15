@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: Insurance API
+  description: An API that allows the agents to obtain exisiting information of insurance
+    or post info of new insurance.
+  contact:
+    name: Bhagyashri
+    email: bhagyashri@sstus.net
+  license:
+    name: SST
+    url: http://license.com
+  version: 3.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/BHAGYASHRI_1/Insurance/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://dev/Insurance/1.0.0
+  description: Dev server
+- url: https://prod/Insurcance/1.0.0
+  description: Production server
+paths:
+  /quote:
+    get:
+      description: Retrieves a list of quotes.
+      operationId: quoteGET
+      parameters:
+      - name: bodylimit
+        in: query
+        description: The amount of quotes returned
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 20
+          minimum: 10
+          type: integer
+          example: 15
+      - name: pagelimit
+        in: query
+        description: The page to return insurance information
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 5
+          minimum: 1
+          type: integer
+          example: 2
+      responses:
+        "200":
+          description: A list of quotes was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotePost'
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      x-swagger-router-controller: Default
+    post:
+      description: Submits a new quote.
+      operationId: quotePOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuotePost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/QuotePost'
+        required: true
+      responses:
+        "200":
+          description: The quote was successfully submitted
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      x-swagger-router-controller: Default
+  /quote/{quoteID}:
+    get:
+      description: Retrieves a quote by ID
+      operationId: quoteQuoteIDGET
+      parameters:
+      - name: quoteID
+        in: path
+        description: The ID of the quote to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: SUB000012334
+      responses:
+        "200":
+          description: The quote was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotePost'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/QuotePost'
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      x-swagger-router-controller: Default
+components:
+  schemas:
+    Quotes:
+      type: array
+      description: Array of quotes info
+      items:
+        $ref: '#/components/schemas/Quote'
+    Quote:
+      properties:
+        submissionNo:
+          type: string
+          example: SUB00123434
+        applicantName:
+          type: string
+          example: Liam
+        insuranceType:
+          type: string
+          example: Home Health Care Insurance
+      description: Model containing insurance info
+    QuotePost:
+      properties:
+        effectiveDate:
+          type: string
+          example: 08/29/22
+        retroDate:
+          type: string
+          example: 08/17/22
+        zipcode:
+          type: integer
+          example: 27612
+        grossRevenues:
+          type: integer
+          example: 2500000
+        noOfPhysicians:
+          type: integer
+          example: 1
+        GL:
+          type: boolean
+          example: true
+        EBL:
+          type: boolean
+          example: false
+        HNOA:
+          type: boolean
+          example: false
+        laser:
+          type: string
+          example: full
+        retention:
+          type: integer
+          example: 0
+        premium:
+          type: integer
+          example: 17023
+      description: Model containing Insurance info input
+      example:
+        zipcode: 27612
+        premium: 17023
+        retroDate: 08/17/22
+        laser: full
+        GL: true
+        grossRevenues: 2500000
+        HNOA: false
+        noOfPhysicians: 1
+        effectiveDate: 08/29/22
+        EBL: false
+        retention: 0
